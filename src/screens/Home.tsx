@@ -18,7 +18,6 @@ export default function Home({ lists, store, listId, setListId, onStart, onParen
 
   const modes: { mode: GameMode; emoji: string; name: string; desc: string }[] = [
     { mode: 'listen', emoji: '🔊', name: t.modeListen, desc: t.modeListenDesc },
-    { mode: 'missing', emoji: '🧩', name: t.modeMissing, desc: t.modeMissingDesc },
     { mode: 'fix', emoji: '🔍', name: t.modeFix, desc: t.modeFixDesc },
     { mode: 'practice', emoji: '🌱', name: t.modePractice, desc: t.modePracticeDesc },
   ]

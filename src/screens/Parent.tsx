@@ -340,36 +340,6 @@ export default function Parent({ allLists, store, persist, onBack }: ParentProps
             ))}
           </select>
         </label>
-        <label className="field">
-          {t.pmMissingMode}
-          <select
-            className="select"
-            value={s.missingMode}
-            onChange={(e) =>
-              setSettings({ missingMode: e.target.value as Store['settings']['missingMode'] })
-            }
-          >
-            <option value="first1">{t.pmFirst1}</option>
-            <option value="first2">{t.pmFirst2}</option>
-            <option value="custom">{t.pmCustomPos}</option>
-          </select>
-        </label>
-        {s.missingMode === 'custom' && (
-          <label className="field">
-            {t.pmCustomPos}
-            <input
-              className="input"
-              defaultValue={s.customPositions.join(',')}
-              onBlur={(e) => {
-                const pos = e.target.value
-                  .split(/[,\s]+/)
-                  .map((x) => Number(x))
-                  .filter((n) => Number.isInteger(n) && n >= 0)
-                if (pos.length > 0) setSettings({ customPositions: [...new Set(pos)] })
-              }}
-            />
-          </label>
-        )}
         <label className="word-check">
           <input
             type="checkbox"

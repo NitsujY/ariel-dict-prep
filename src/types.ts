@@ -1,4 +1,4 @@
-export type GameMode = 'listen' | 'missing' | 'fix' | 'practice'
+export type GameMode = 'listen' | 'fix' | 'practice'
 
 export interface WordEntry {
   id: string
@@ -26,8 +26,6 @@ export interface Settings {
   /** Number of options in Listen & Find (2 or 3). */
   optionCount: number
   roundLength: number
-  missingMode: 'first1' | 'first2' | 'custom'
-  customPositions: number[]
   /** Show the complete word during preview, before "I'm ready". */
   showWordFirst: boolean
   /** Offer a small set of letter choices instead of the full alphabet. */

@@ -1,16 +1,10 @@
 import { describe, expect, it } from 'vitest'
-import { buildOptions, fixQuestion, missingChoices, resolveBlanks, shuffle } from './questions'
-import type { Settings } from './types'
+import { buildOptions, fixQuestion, missingChoices, shuffle } from './questions'
 
 /** Deterministic rng cycling through the given values. */
 const seq = (...nums: number[]) => {
   let i = 0
   return () => nums[i++ % nums.length]
-}
-
-const baseSettings: Pick<Settings, 'missingMode' | 'customPositions'> = {
-  missingMode: 'first1',
-  customPositions: [0],
 }
 
 describe('buildOptions', () => {
@@ -33,35 +27,6 @@ describe('buildOptions', () => {
   it('ignores case differences when excluding the target', () => {
     const opts = buildOptions('Happy', ['Happy', 'happy', 'tall'], 3)
     expect(opts.filter((o) => o.toLowerCase() === 'happy').length).toBe(1)
-  })
-})
-
-describe('resolveBlanks', () => {
-  it('first1 / first2 presets', () => {
-    expect(resolveBlanks('happy', { ...baseSettings, missingMode: 'first1' })).toEqual([0])
-    expect(resolveBlanks('happy', { ...baseSettings, missingMode: 'first2' })).toEqual([0, 1])
-  })
-
-  it('clamps to word length and removes duplicates', () => {
-    expect(
-      resolveBlanks('hi', { missingMode: 'custom', customPositions: [0, 1, 9, 0, -1] }),
-    ).toEqual([0, 1])
-  })
-
-  it('falls back to [0] when nothing valid remains', () => {
-    expect(resolveBlanks('cat', { missingMode: 'custom', customPositions: [7] })).toEqual([0])
-  })
-
-  it('handles repeated-letter words by position, not by letter', () => {
-    expect(resolveBlanks('happy', { missingMode: 'custom', customPositions: [2, 3] })).toEqual([
-      2, 3,
-    ])
-  })
-
-  it('uses word-level presets in custom mode when available', () => {
-    expect(
-      resolveBlanks('happy', { missingMode: 'custom', customPositions: [9] }, [[1, 4]]),
-    ).toEqual([1, 4])
   })
 })
 

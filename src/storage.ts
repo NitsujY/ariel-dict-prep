@@ -8,8 +8,6 @@ export const defaultSettings: Settings = {
   rate: 0.9,
   optionCount: 3,
   roundLength: 3,
-  missingMode: 'first1',
-  customPositions: [0],
   showWordFirst: true,
   letterChoices: true,
   practiceChoices: 3,

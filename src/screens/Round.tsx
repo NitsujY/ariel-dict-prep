@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react'
 import type { Attempt, GameMode, Settings, WordEntry, WordList } from '../types'
 import { t } from '../i18n'
 import { playWord, stopAll } from '../audio'
-import { buildOptions, fixQuestion, missingChoices, resolveBlanks, shuffle } from '../questions'
+import { buildOptions, fixQuestion, missingChoices, shuffle } from '../questions'
 
 interface RoundProps {
   list: WordList
@@ -24,7 +24,6 @@ interface GameProps {
 
 const modeTitle: Record<GameMode, string> = {
   listen: t.modeListen,
-  missing: t.modeMissing,
   fix: t.modeFix,
   practice: t.modePractice,
 }
@@ -167,7 +166,6 @@ export default function Round({ list, words, mode, settings, onExit, onRecord }:
         <div className="card">
           {wordVisible && <div className="word-display small">{entry.word}</div>}
           {mode === 'listen' && <ListenGame key={`${round}-${idx}`} {...gameProps} />}
-          {mode === 'missing' && <MissingGame key={`${round}-${idx}`} {...gameProps} />}
           {mode === 'fix' && <FixGame key={`${round}-${idx}`} {...gameProps} />}
           <div className="row wrap controls">
             <button className="btn" onClick={play}>
@@ -222,77 +220,6 @@ function ListenGame({ entry, words, settings, onCorrect, onWrong }: GameProps) {
           </button>
         ))}
       </div>
-      {msg && <p className="gentle">{msg}</p>}
-    </div>
-  )
-}
-
-function MissingGame({ entry, settings, onCorrect, onWrong }: GameProps) {
-  const blanks = useMemo(
-    () => resolveBlanks(entry.word, settings, entry.blankPresets),
-    [entry, settings],
-  )
-  const choices = useMemo(
-    () => missingChoices(entry.word, blanks, settings.letterChoices),
-    [entry, blanks, settings.letterChoices],
-  )
-  const [filled, setFilled] = useState<Record<number, string>>({})
-  const [active, setActive] = useState(blanks[0])
-  const [wrongPos, setWrongPos] = useState<number[]>([])
-  const [msg, setMsg] = useState('')
-  const allFilled = blanks.every((p) => filled[p] !== undefined)
-
-  const tapLetter = (c: string) => {
-    const next = { ...filled, [active]: c }
-    setFilled(next)
-    setWrongPos((w) => w.filter((p) => p !== active))
-    const upcoming =
-      blanks.find((p) => p > active && next[p] === undefined) ??
-      blanks.find((p) => next[p] === undefined)
-    if (upcoming !== undefined) setActive(upcoming)
-  }
-  const check = () => {
-    const bad = blanks.filter((p) => filled[p] !== entry.word[p])
-    if (bad.length === 0) onCorrect()
-    else {
-      setWrongPos(bad)
-      setMsg(t.tryAgain)
-      onWrong()
-    }
-  }
-
-  return (
-    <div className="center">
-      <p className="prompt">{t.tapBlank}</p>
-      <div className="tiles" role="group" aria-label="word">
-        {entry.word.split('').map((c, i) =>
-          blanks.includes(i) ? (
-            <button
-              key={i}
-              className={`tile blank ${i === active ? 'active' : ''} ${wrongPos.includes(i) ? 'wrong' : ''}`}
-              onClick={() => setActive(i)}
-              aria-label={`missing letter ${i + 1}`}
-              aria-pressed={i === active}
-            >
-              {filled[i] ?? ''}
-            </button>
-          ) : (
-            <span key={i} className="tile given">
-              {c}
-            </span>
-          ),
-        )}
-      </div>
-      <div className="letters">
-        {choices.map((c, i) => (
-          <button key={i} className="btn letter" onClick={() => tapLetter(c)}>
-            {c}
-          </button>
-        ))}
-      </div>
-      <button className="btn primary big" onClick={check} disabled={!allFilled}>
-        {t.check}
-      </button>
       {msg && <p className="gentle">{msg}</p>}
     </div>
   )

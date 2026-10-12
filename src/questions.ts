@@ -1,5 +1,4 @@
 // Pure question-generation logic — no React, no DOM, fully testable.
-import type { Settings } from './types'
 
 export function shuffle<T>(arr: T[], rng: () => number = Math.random): T[] {
   const a = [...arr]
@@ -22,31 +21,6 @@ export function buildOptions(
     rng,
   )
   return shuffle([target, ...others.slice(0, Math.max(0, count - 1))], rng)
-}
-
-/**
- * Which positions become blanks. Always returns at least one valid,
- * in-range, unique, sorted position. Repeated letters need no special
- * handling: each blank is tied to its own position.
- */
-export function resolveBlanks(
-  word: string,
-  s: Pick<Settings, 'missingMode' | 'customPositions'>,
-  presets?: number[][],
-): number[] {
-  const len = word.length
-  const raw =
-    s.missingMode === 'custom'
-      ? presets && presets.length > 0
-        ? presets[0]
-        : s.customPositions
-      : s.missingMode === 'first1'
-        ? [0]
-        : [0, 1]
-  const clean = [...new Set(raw)]
-    .filter((p) => Number.isInteger(p) && p >= 0 && p < len)
-    .sort((a, b) => a - b)
-  return clean.length > 0 ? clean : [0]
 }
 
 const ALPHA = 'abcdefghijklmnopqrstuvwxyz'.split('')
