@@ -1,0 +1,18 @@
+{
+  "lists": [
+    {
+      "id": "builtin-adjectives-01",
+      "title": "形容詞 Adjectives",
+      "date": "2025-10",
+      "lang": "en-GB",
+      "words": [
+        { "id": "w-tall", "word": "tall", "sentence": "The giraffe is tall." },
+        { "id": "w-pretty", "word": "pretty", "sentence": "What a pretty flower!" },
+        { "id": "w-lovely", "word": "lovely", "sentence": "Have a lovely day." },
+        { "id": "w-smart", "word": "smart", "sentence": "The owl is smart." },
+        { "id": "w-happy", "word": "happy", "sentence": "I am happy today." },
+        { "id": "w-helpful", "word": "helpful", "sentence": "Thank you for being helpful." }
+      ]
+    }
+  ]
+}
