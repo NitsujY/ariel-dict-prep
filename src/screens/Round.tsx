@@ -172,11 +172,15 @@ export default function Round({ list, words, mode, settings, onExit, onRecord }:
               {t.listen}
             </button>
             <button
-              className="btn"
-              onClick={() => {
-                setShowHint((s) => !s)
+              className="btn peek"
+              onPointerDown={() => {
+                setShowHint(true)
                 setUsedHint(true)
               }}
+              onPointerUp={() => setShowHint(false)}
+              onPointerLeave={() => setShowHint(false)}
+              onPointerCancel={() => setShowHint(false)}
+              onBlur={() => setShowHint(false)}
             >
               {t.showWord}
             </button>

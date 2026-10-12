@@ -24,34 +24,38 @@ export default function Home({ lists, store, listId, setListId, onStart, onParen
 
   return (
     <div className="screen home">
+      <div className="topbar">
+        <button className="btn ghost" onClick={onParent}>
+          ⚙️ {t.parentMode}
+        </button>
+        <span className="list-picker">
+          <select
+            className="select compact"
+            value={list?.id ?? ''}
+            onChange={(e) => setListId(e.target.value)}
+            aria-label={t.chooseList}
+          >
+            {lists.map((l) => (
+              <option key={l.id} value={l.id}>
+                {l.title}
+                {l.date ? ` (${l.date})` : ''} — {l.builtin ? t.builtin : t.custom}
+              </option>
+            ))}
+          </select>
+          <button className="btn ghost" onClick={onAddList} aria-label={t.homeAddList}>
+            ➕
+          </button>
+        </span>
+      </div>
+
       <header className="hero">
         <h1>{t.appName}</h1>
         <p className="soft">{t.tagline}</p>
       </header>
 
-      <section className="card">
-        <h2>{t.chooseList}</h2>
-        <select
-          className="select"
-          value={list?.id ?? ''}
-          onChange={(e) => setListId(e.target.value)}
-          aria-label={t.chooseList}
-        >
-          {lists.map((l) => (
-            <option key={l.id} value={l.id}>
-              {l.title}
-              {l.date ? ` (${l.date})` : ''} — {l.builtin ? t.builtin : t.custom}
-            </option>
-          ))}
-        </select>
-        {list && <p className="soft">{t.wordsInRound(count)}</p>}
-        <button className="btn ghost" onClick={onAddList}>
-          {t.homeAddList}
-        </button>
-      </section>
-
       <section>
         <h2>{t.chooseGame}</h2>
+        {list && <p className="soft">{t.wordsInRound(count)}</p>}
         <div className="mode-grid">
           {modes.map((m) => (
             <button
@@ -69,12 +73,6 @@ export default function Home({ lists, store, listId, setListId, onStart, onParen
           ))}
         </div>
       </section>
-
-      <footer>
-        <button className="btn ghost" onClick={onParent}>
-          ⚙️ {t.parentMode}
-        </button>
-      </footer>
     </div>
   )
 }

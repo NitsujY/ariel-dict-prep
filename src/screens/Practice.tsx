@@ -192,8 +192,13 @@ export default function Practice({
           <div className="chips" aria-hidden>
             {words.map((w) => (
               <span key={w.id} className={`chip ${get(w.id).mastered ? 'done' : ''}`}>
-                {get(w.id).mastered ? '🌟 ' : ''}
-                <span lang="en">{w.word}</span>
+                {get(w.id).mastered ? (
+                  <>
+                    🌟 <span lang="en">{w.word}</span>
+                  </>
+                ) : (
+                  '○'
+                )}
               </span>
             ))}
           </div>
@@ -260,11 +265,15 @@ export default function Practice({
                   {t.listen}
                 </button>
                 <button
-                  className="btn"
-                  onClick={() => {
-                    setShowHint((s) => !s)
+                  className="btn peek"
+                  onPointerDown={() => {
+                    setShowHint(true)
                     setUsedHint(true)
                   }}
+                  onPointerUp={() => setShowHint(false)}
+                  onPointerLeave={() => setShowHint(false)}
+                  onPointerCancel={() => setShowHint(false)}
+                  onBlur={() => setShowHint(false)}
                 >
                   {t.showWord}
                 </button>

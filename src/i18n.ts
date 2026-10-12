@@ -20,7 +20,7 @@ export const t = {
   modeFixDesc: '搵出錯嘅字母，改返啱',
 
   listen: '🔊 再聽一次',
-  showWord: '👀 睇下個字',
+  showWord: '👀 撳住睇個字',
   imReady: '我準備好喇！',
   skip: '跳過 ⏭',
   exit: '✕ 離開',
