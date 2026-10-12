@@ -1,4 +1,4 @@
-export type GameMode = 'listen' | 'missing' | 'fix'
+export type GameMode = 'listen' | 'missing' | 'fix' | 'practice'
 
 export interface WordEntry {
   id: string
@@ -32,6 +32,21 @@ export interface Settings {
   showWordFirst: boolean
   /** Offer a small set of letter choices instead of the full alphabet. */
   letterChoices: boolean
+  /** Practice mode: size of the letter-choice pool. */
+  practiceChoices: number
+  /** Practice mode: leading blanks when a word is first seen. */
+  practiceStartBlanks: number
+  /** Practice mode: consecutive unhinted full-word correct answers to master a word. */
+  masteryTarget: number
+}
+
+/** Per-word practice progress, persisted locally. */
+export interface PracticeProgress {
+  /** Number of leading letters the child must currently fill in. */
+  level: number
+  /** Consecutive unhinted correct answers at full-word level. */
+  streak: number
+  mastered: boolean
 }
 
 export type AttemptCategory = 'listening' | 'hinted' | 'unhinted'
@@ -57,4 +72,6 @@ export interface Store {
   records: Attempt[]
   /** Per-list session word subset; missing entry = all words. */
   selectedWords: Record<string, string[]>
+  /** Practice progress: listId → wordId → progress. */
+  practice: Record<string, Record<string, PracticeProgress>>
 }

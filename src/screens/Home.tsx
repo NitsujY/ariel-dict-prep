@@ -9,9 +9,10 @@ interface HomeProps {
   setListId: (id: string) => void
   onStart: (mode: GameMode) => void
   onParent: () => void
+  onAddList: () => void
 }
 
-export default function Home({ lists, store, listId, setListId, onStart, onParent }: HomeProps) {
+export default function Home({ lists, store, listId, setListId, onStart, onParent, onAddList }: HomeProps) {
   const list = lists.find((l) => l.id === listId) ?? lists[0]
   const count = list ? sessionWords(list, store.selectedWords).length : 0
 
@@ -19,6 +20,7 @@ export default function Home({ lists, store, listId, setListId, onStart, onParen
     { mode: 'listen', emoji: '🔊', name: t.modeListen, desc: t.modeListenDesc },
     { mode: 'missing', emoji: '🧩', name: t.modeMissing, desc: t.modeMissingDesc },
     { mode: 'fix', emoji: '🔍', name: t.modeFix, desc: t.modeFixDesc },
+    { mode: 'practice', emoji: '🌱', name: t.modePractice, desc: t.modePracticeDesc },
   ]
 
   return (
@@ -44,6 +46,9 @@ export default function Home({ lists, store, listId, setListId, onStart, onParen
           ))}
         </select>
         {list && <p className="soft">{t.wordsInRound(count)}</p>}
+        <button className="btn ghost" onClick={onAddList}>
+          {t.homeAddList}
+        </button>
       </section>
 
       <section>

@@ -20,6 +20,7 @@ export default function Parent({ allLists, store, persist, onBack }: ParentProps
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([])
   const [importMsg, setImportMsg] = useState('')
   const fileRef = useRef<HTMLInputElement>(null)
+  const txtRef = useRef<HTMLInputElement>(null)
   const s = store.settings
 
   useEffect(() => {
@@ -93,6 +94,30 @@ export default function Parent({ allLists, store, persist, onBack }: ParentProps
     setImportMsg(t.pmImportOk)
   }
 
+  const doImportTxt = async (f: File) => {
+    const { words, errors } = parsePastedWords(await f.text())
+    if (words.length === 0) {
+      setImportMsg(`${t.pmImportBad}${errors[0] ?? '冇有效詞語'}`)
+      return
+    }
+    const id = newId()
+    persist((st) => ({
+      ...st,
+      customLists: [
+        ...st.customLists,
+        {
+          id,
+          title: f.name.replace(/\.[^.]+$/, ''),
+          date: new Date().toISOString().slice(0, 10),
+          lang: 'en-GB',
+          words: words.map((word) => ({ id: newId(), word })),
+        },
+      ],
+    }))
+    setListId(id)
+    setImportMsg(`${t.pmImportOk}${errors.length > 0 ? `（${errors.join('；')}）` : ''}`)
+  }
+
   const summary = summarize(store.records)
 
   return (
@@ -118,6 +143,30 @@ export default function Parent({ allLists, store, persist, onBack }: ParentProps
           <button className="btn" onClick={createList}>
             ➕ {t.pmNewList}
           </button>
+          {list?.builtin && (
+            <button
+              className="btn"
+              onClick={() => {
+                const id = newId()
+                persist((st) => ({
+                  ...st,
+                  customLists: [
+                    ...st.customLists,
+                    {
+                      ...list,
+                      id,
+                      builtin: false,
+                      title: `${list.title} (副本)`,
+                      words: list.words.map((w) => ({ ...w, id: newId() })),
+                    },
+                  ],
+                }))
+                setListId(id)
+              }}
+            >
+              📋 {t.pmCopyList}
+            </button>
+          )}
           {list && !list.builtin && (
             <button
               className="btn danger"
@@ -337,6 +386,61 @@ export default function Parent({ allLists, store, persist, onBack }: ParentProps
           />
           {t.pmLetterChoices}
         </label>
+
+        <h4>{t.pmPracticeSection}</h4>
+        <label className="field">
+          {t.pmPracticeChoices}
+          <select
+            className="select"
+            value={s.practiceChoices}
+            onChange={(e) => setSettings({ practiceChoices: Number(e.target.value) })}
+          >
+            {[2, 3, 4, 5].map((n) => (
+              <option key={n} value={n}>
+                {n}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="field">
+          {t.pmPracticeStart}
+          <select
+            className="select"
+            value={s.practiceStartBlanks}
+            onChange={(e) => setSettings({ practiceStartBlanks: Number(e.target.value) })}
+          >
+            {[1, 2].map((n) => (
+              <option key={n} value={n}>
+                {n}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="field">
+          {t.pmMasteryTarget}
+          <select
+            className="select"
+            value={s.masteryTarget}
+            onChange={(e) => setSettings({ masteryTarget: Number(e.target.value) })}
+          >
+            {[1, 2, 3, 4, 5].map((n) => (
+              <option key={n} value={n}>
+                {n}
+              </option>
+            ))}
+          </select>
+        </label>
+        {list && (
+          <button
+            className="btn danger"
+            onClick={() => {
+              if (confirm(t.pmResetPractice + '？'))
+                persist((st) => ({ ...st, practice: { ...st.practice, [list.id]: {} } }))
+            }}
+          >
+            {t.pmResetPractice}
+          </button>
+        )}
       </section>
 
       <section className="card">
@@ -394,6 +498,20 @@ export default function Parent({ allLists, store, persist, onBack }: ParentProps
           <button className="btn" onClick={() => fileRef.current?.click()}>
             {t.pmImport}
           </button>
+          <button className="btn" onClick={() => txtRef.current?.click()}>
+            {t.pmImportTxt}
+          </button>
+          <input
+            ref={txtRef}
+            type="file"
+            accept=".txt,text/plain"
+            hidden
+            onChange={(e) => {
+              const f = e.target.files?.[0]
+              if (f) doImportTxt(f)
+              e.target.value = ''
+            }}
+          />
           <input
             ref={fileRef}
             type="file"

@@ -18,6 +18,8 @@ export const t = {
   modeMissingDesc: '填返缺少嘅字母',
   modeFix: '改改錯字',
   modeFixDesc: '搵出錯嘅字母，改返啱',
+  modePractice: '漸進練習',
+  modePracticeDesc: '由淺入深，串熟每個詞為止',
 
   listen: '🔊 再聽一次',
   showWord: '👀 睇下個字',
@@ -41,6 +43,13 @@ export const t = {
   roundDone: '做完喇！🎉',
   allDone: '全部完成 🏠',
   playAgain: '再玩一次 🔁',
+
+  practiceProgress: (done: number, total: number) => `已掌握 ${done} / ${total}`,
+  masteredWord: (word: string) => `🌟 「${word}」掌握咗喇！`,
+  practiceAllMastered: '全部詞語都掌握晒！你好叻！🌟',
+  practiceRestart: '由頭再練 🔁',
+  practiceFill: (n: number) => `今次由頭開始，自己串 ${n} 個字母`,
+  homeAddList: '➕ 新增字表（貼上詞語就得）',
 
   // Parent mode
   pmLists: '字表管理',
@@ -67,6 +76,13 @@ export const t = {
   pmCustomPos: '自訂位置（例如 0,2）',
   pmShowWordFirst: '開始前顯示完整詞語',
   pmLetterChoices: '提供字母選項（否則顯示完整字母表）',
+  pmPracticeSection: '漸進練習設定',
+  pmPracticeChoices: '字母選項數目',
+  pmPracticeStart: '開始時隱藏字母數',
+  pmMasteryTarget: '連續答啱幾多次先算掌握',
+  pmResetPractice: '清除此字表嘅練習進度',
+  pmCopyList: '複製成自訂字表（就可以改）',
+  pmImportTxt: '匯入純文字檔（每行一詞）📄',
   pmRecords: '練習紀錄',
   pmResetRecords: '清除紀錄',
   pmResetConfirm: '確定清除所有練習紀錄？',

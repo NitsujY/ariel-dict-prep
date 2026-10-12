@@ -3,9 +3,10 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import type { GameMode, Store } from './types'
 import { t } from './i18n'
 import { addRecord, loadStore, saveStore } from './storage'
-import { loadBundled, sessionWords } from './wordlists'
+import { loadBundled, newId, sessionWords } from './wordlists'
 import Home from './screens/Home'
 import Parent from './screens/Parent'
+import Practice from './screens/Practice'
 import Round from './screens/Round'
 
 function useHash(): string {
@@ -47,17 +48,43 @@ export default function App() {
     const words = list ? sessionWords(list, store.selectedWords) : []
     screen =
       list && words.length > 0 ? (
-        <Round
-          list={list}
-          words={words}
-          mode={session.mode}
-          settings={store.settings}
-          onExit={() => {
-            setSession(null)
-            window.location.hash = '#/'
-          }}
-          onRecord={(a) => persist((st) => addRecord(st, a))}
-        />
+        session.mode === 'practice' ? (
+          <Practice
+            list={list}
+            words={words}
+            settings={store.settings}
+            progress={store.practice[list.id] ?? {}}
+            onProgress={(wordId, p) =>
+              persist((st) => ({
+                ...st,
+                practice: {
+                  ...st.practice,
+                  [list.id]: { ...st.practice[list.id], [wordId]: p },
+                },
+              }))
+            }
+            onResetProgress={() =>
+              persist((st) => ({ ...st, practice: { ...st.practice, [list.id]: {} } }))
+            }
+            onExit={() => {
+              setSession(null)
+              window.location.hash = '#/'
+            }}
+            onRecord={(a) => persist((st) => addRecord(st, a))}
+          />
+        ) : (
+          <Round
+            list={list}
+            words={words}
+            mode={session.mode}
+            settings={store.settings}
+            onExit={() => {
+              setSession(null)
+              window.location.hash = '#/'
+            }}
+            onRecord={(a) => persist((st) => addRecord(st, a))}
+          />
+        )
       ) : (
         <HomeScreen />
       )
@@ -73,6 +100,18 @@ export default function App() {
         listId={listId}
         setListId={setListId}
         onParent={() => (window.location.hash = '#/parent')}
+        onAddList={() => {
+          const id = newId()
+          persist((st) => ({
+            ...st,
+            customLists: [
+              ...st.customLists,
+              { id, title: '新字表', date: new Date().toISOString().slice(0, 10), lang: 'en-GB', words: [] },
+            ],
+          }))
+          setListId(id)
+          window.location.hash = '#/parent'
+        }}
         onStart={(mode) => {
           const list = lists.find((l) => l.id === listId) ?? lists[0]
           if (!list) return

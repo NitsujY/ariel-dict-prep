@@ -63,6 +63,7 @@ export function missingChoices(
   blanks: number[],
   choicesEnabled: boolean,
   rng: () => number = Math.random,
+  size = 5,
 ): string[] {
   const needed = blanks.map((p) => word[p])
   if (!choicesEnabled) {
@@ -73,7 +74,7 @@ export function missingChoices(
   const distractors = shuffle(
     ALPHA.filter((c) => !needed.includes(c)),
     rng,
-  ).slice(0, Math.max(2, 5 - needed.length))
+  ).slice(0, Math.max(2, size - needed.length))
   return shuffle([...needed, ...distractors], rng)
 }
 

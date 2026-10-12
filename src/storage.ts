@@ -12,10 +12,20 @@ export const defaultSettings: Settings = {
   customPositions: [0],
   showWordFirst: true,
   letterChoices: true,
+  practiceChoices: 3,
+  practiceStartBlanks: 1,
+  masteryTarget: 2,
 }
 
 export function defaultStore(): Store {
-  return { version: 1, customLists: [], settings: defaultSettings, records: [], selectedWords: {} }
+  return {
+    version: 1,
+    customLists: [],
+    settings: defaultSettings,
+    records: [],
+    selectedWords: {},
+    practice: {},
+  }
 }
 
 /** degraded=true means storage was missing/corrupt — app still works, nothing persists. */
@@ -31,6 +41,7 @@ export function loadStore(): { store: Store; degraded: boolean } {
       settings: { ...defaultSettings, ...(d.settings ?? {}) },
       records: Array.isArray(d.records) ? d.records : [],
       selectedWords: d.selectedWords && typeof d.selectedWords === 'object' ? d.selectedWords : {},
+      practice: d.practice && typeof d.practice === 'object' ? d.practice : {},
     }
     return { store, degraded: false }
   } catch {
