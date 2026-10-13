@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { buildOptions, fixQuestion, missingChoices, shuffle } from './questions'
+import { buildOptions, fixQuestion, missingChoices, moleChoices, scatterMoles, shuffle } from './questions'
 
 /** Deterministic rng cycling through the given values. */
 const seq = (...nums: number[]) => {
@@ -47,6 +47,35 @@ describe('missingChoices', () => {
     const choices = missingChoices('Happy', [0], false)
     expect(choices).toContain('H')
     expect(choices.length).toBe(27)
+  })
+})
+
+describe('moleChoices', () => {
+  it('includes the needed letter, never twice, and no duplicates', () => {
+    for (let pos = 0; pos < 'happy'.length; pos++) {
+      const choices = moleChoices('happy', pos, seq(0.1))
+      expect(choices.filter((c) => c === 'happy'[pos]).length).toBe(1)
+      expect(new Set(choices).size).toBe(choices.length)
+    }
+  })
+
+  it('prefers the word\u2019s other letters as distractors (challenge)', () => {
+    const choices = moleChoices('tall', 0, seq(0.2), 4)
+    expect(choices).toContain('a')
+    expect(choices).toContain('l')
+  })
+})
+
+describe('scatterMoles', () => {
+  it('places every letter exactly once in distinct holes, rest empty', () => {
+    const field = scatterMoles(['a', 'b', 'c'], 9, seq(0.1))
+    expect(field.length).toBe(9)
+    expect(field.filter((c) => c !== null).sort()).toEqual(['a', 'b', 'c'])
+  })
+
+  it('caps at the number of holes', () => {
+    const field = scatterMoles('abcdefghijk'.split(''), 9, seq(0.3))
+    expect(field.filter((c) => c !== null).length).toBe(9)
   })
 })
 

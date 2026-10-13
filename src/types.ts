@@ -1,4 +1,4 @@
-export type GameMode = 'listen' | 'fix' | 'practice'
+export type GameMode = 'listen' | 'fix' | 'practice' | 'mole'
 
 export interface WordEntry {
   id: string
@@ -36,6 +36,8 @@ export interface Settings {
   practiceStartBlanks: number
   /** Practice mode: consecutive unhinted full-word correct answers to master a word. */
   masteryTarget: number
+  /** Mole mode: letters to whack per word, starting from the first char; 0 = whole word. */
+  moleTarget: number
 }
 
 /** Per-word practice progress, persisted locally. */

@@ -308,6 +308,100 @@ h4 {
   padding: 8px;
 }
 
+.field-ground {
+  display: grid;
+  grid-template-columns: repeat(3, 88px);
+  gap: 14px;
+  justify-content: center;
+  margin-bottom: 16px;
+  padding: 18px 12px 8px;
+  border-radius: 16px;
+  background: linear-gradient(#9ccc65, #7cb342);
+}
+.hole {
+  width: 88px;
+  height: 76px;
+  overflow: hidden;
+  border-bottom: 14px solid #6d4c41;
+  border-radius: 0 0 50% 50%;
+  background: radial-gradient(ellipse at 50% 100%, #4e342e 0 55%, transparent 56%);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+.hole:nth-child(odd) {
+  transform: rotate(-2deg);
+}
+.hole:nth-child(even) {
+  transform: rotate(2deg);
+}
+.mole {
+  width: 76px;
+  height: 70px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.9rem;
+  line-height: 1;
+  background: none;
+  border: none;
+  cursor: pointer;
+  animation: mole-pop 0.3s ease-out;
+}
+.mole:active {
+  transform: scale(0.9);
+}
+.mole.bonked {
+  animation: mole-bonk 0.4s ease-in;
+}
+.mole.wrong {
+  animation: mole-shake 0.3s ease-in-out;
+}
+.mole-letter {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #5d4037;
+  background: #fff8e1;
+  border-radius: 8px;
+  padding: 0 8px;
+  font-family: 'Comic Sans MS', 'Chalkboard SE', 'Avenir Next', sans-serif;
+}
+@keyframes mole-pop {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@keyframes mole-bonk {
+  0% {
+    transform: translateY(0) scale(1);
+  }
+  40% {
+    transform: translateY(30%) scaleY(0.4) scaleX(1.3);
+  }
+  100% {
+    transform: translateY(20%) scaleY(0.6);
+  }
+}
+@keyframes mole-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-6px);
+  }
+  75% {
+    transform: translateX(6px);
+  }
+}
+.tile.given.dim {
+  opacity: 0.45;
+}
+
 .gentle {
   color: var(--soft);
   font-size: 1.05rem;

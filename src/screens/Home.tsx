@@ -20,6 +20,7 @@ export default function Home({ lists, store, listId, setListId, onStart, onParen
     { mode: 'listen', emoji: '🔊', name: t.modeListen, desc: t.modeListenDesc },
     { mode: 'fix', emoji: '🔍', name: t.modeFix, desc: t.modeFixDesc },
     { mode: 'practice', emoji: '🌱', name: t.modePractice, desc: t.modePracticeDesc },
+    { mode: 'mole', emoji: '🔨', name: t.modeMole, desc: t.modeMoleDesc },
   ]
 
   return (

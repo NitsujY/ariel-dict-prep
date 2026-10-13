@@ -26,6 +26,7 @@ const modeTitle: Record<GameMode, string> = {
   listen: t.modeListen,
   fix: t.modeFix,
   practice: t.modePractice,
+  mole: t.modeMole,
 }
 
 export default function Round({ list, words, mode, settings, onExit, onRecord }: RoundProps) {

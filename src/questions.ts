@@ -53,6 +53,45 @@ export function missingChoices(
 }
 
 /**
+ * Whack-a-mole letter buttons for one position: the needed letter plus
+ * distractors drawn first from the word's other letters (challenge), then
+ * the alphabet. Always includes word[pos].
+ */
+export function moleChoices(
+  word: string,
+  pos: number,
+  rng: () => number = Math.random,
+  size = 5,
+): string[] {
+  const needed = word[pos]
+  // Word's own letters first (confusing on purpose), then the alphabet.
+  const others = shuffle([...new Set(word.split('').filter((c, i) => i !== pos && c !== needed))], rng)
+  const alpha = shuffle(ALPHA.filter((c) => c !== needed && !word.includes(c)), rng)
+  const distractors = [...others, ...alpha].slice(0, Math.max(2, size - 1))
+  return shuffle([needed, ...distractors], rng)
+}
+
+/**
+ * Scatter letter-carrying moles into a fixed field of holes (3×3 = 9):
+ * each letter lands in a distinct random hole, the rest stay empty.
+ */
+export function scatterMoles(
+  letters: string[],
+  holes = 9,
+  rng: () => number = Math.random,
+): (string | null)[] {
+  const spots = shuffle(
+    Array.from({ length: holes }, (_, i) => i),
+    rng,
+  ).slice(0, letters.length)
+  const out: (string | null)[] = Array(holes).fill(null)
+  shuffle(letters, rng).forEach((c, i) => {
+    out[spots[i]] = c
+  })
+  return out
+}
+
+/**
  * Fix the Word: the displayed string differs from the target at exactly
  * one position, and never spells the target. Capitalisation is preserved.
  */

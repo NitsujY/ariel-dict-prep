@@ -400,6 +400,22 @@ export default function Parent({ allLists, store, persist, onBack }: ParentProps
             ))}
           </select>
         </label>
+        <h4>{t.pmMoleSection}</h4>
+        <label className="field">
+          {t.pmMoleTarget}
+          <select
+            className="select"
+            value={s.moleTarget}
+            onChange={(e) => setSettings({ moleTarget: Number(e.target.value) })}
+          >
+            {[1, 2, 3, 4, 5].map((n) => (
+              <option key={n} value={n}>
+                {t.moleLevel(n)}
+              </option>
+            ))}
+            <option value={0}>{t.moleAll}</option>
+          </select>
+        </label>
         {list && (
           <button
             className="btn danger"

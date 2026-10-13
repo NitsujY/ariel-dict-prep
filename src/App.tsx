@@ -6,6 +6,7 @@ import { addRecord, loadStore, saveStore } from './storage'
 import { loadBundled, newId, sessionWords } from './wordlists'
 import Home from './screens/Home'
 import Parent from './screens/Parent'
+import Mole from './screens/Mole'
 import Practice from './screens/Practice'
 import Round from './screens/Round'
 
@@ -48,7 +49,18 @@ export default function App() {
     const words = list ? sessionWords(list, store.selectedWords) : []
     screen =
       list && words.length > 0 ? (
-        session.mode === 'practice' ? (
+        session.mode === 'mole' ? (
+        <Mole
+          list={list}
+          words={words}
+          settings={store.settings}
+          onExit={() => {
+            setSession(null)
+            window.location.hash = '#/'
+          }}
+          onRecord={(a) => persist((st) => addRecord(st, a))}
+        />
+      ) : session.mode === 'practice' ? (
           <Practice
             list={list}
             words={words}
