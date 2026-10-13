@@ -13,7 +13,7 @@ export const defaultSettings: Settings = {
   practiceChoices: 3,
   practiceStartBlanks: 1,
   masteryTarget: 2,
-  moleTarget: 0,
+  moleTarget: 1,
 }
 
 export function defaultStore(): Store {

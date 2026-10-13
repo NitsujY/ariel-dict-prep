@@ -25,9 +25,8 @@ export default function Mole({ list, words, settings, onExit, onRecord }: MolePr
     scatterMoles(moleChoices(w.word, pos, Math.random, settings.practiceChoices), 9)
 
   const [entry, setEntry] = useState<WordEntry>(() => pick())
-  // Session difficulty: letters to whack per word. 0 in settings = whole word (no ramp).
-  const [level, setLevel] = useState(() => Math.max(1, settings.moleTarget))
-  const target = settings.moleTarget === 0 ? entry.word.length : Math.min(level, entry.word.length)
+  // Letters to whack per word, fixed by parent config. 0 = whole word.
+  const target = settings.moleTarget === 0 ? entry.word.length : Math.min(settings.moleTarget, entry.word.length)
   const [idx, setIdx] = useState(0)
   const [field, setField] = useState<(string | null)[]>(() => newField(entry, 0))
   const [cycle, setCycle] = useState(0) // bumps to re-run the pop animation
@@ -52,7 +51,7 @@ export default function Mole({ list, words, settings, onExit, onRecord }: MolePr
     const id = setInterval(() => {
       setField((f) => scatterMoles(f.filter((c): c is string => c !== null), 9))
       setCycle((c) => c + 1)
-    }, 1800)
+    }, 3000)
     return () => clearInterval(id)
   }, [feedback, bonked])
 
@@ -99,7 +98,6 @@ export default function Mole({ list, words, settings, onExit, onRecord }: MolePr
         usedHint: false,
       })
       setWhacked((n) => n + 1)
-      if (settings.moleTarget > 0) setLevel((l) => l + 1)
       setFeedback(t.correctMsgs[Math.floor(Math.random() * t.correctMsgs.length)])
     }, 400)
   }
@@ -115,10 +113,7 @@ export default function Mole({ list, words, settings, onExit, onRecord }: MolePr
         <button className="btn ghost" onClick={exit}>
           {t.exit}
         </button>
-        <span className="mode-tag">
-          {t.modeMole}
-          {settings.moleTarget > 0 && ` ${t.moleLevelTag(Math.min(level, entry.word.length))}`}
-        </span>
+        <span className="mode-tag">{t.modeMole}</span>
         <span className="progress">{t.moleWhacked(whacked)}</span>
       </div>
       {speechWarn && <p className="notice">{t.speechUnavailable}</p>}
